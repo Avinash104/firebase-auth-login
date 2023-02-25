@@ -1,10 +1,14 @@
 import { signInWithEmailAndPassword } from "firebase/auth"
 import { useState } from "react"
+import { useDispatch } from "react-redux"
 import { useNavigate } from "react-router-dom"
 import { auth } from "../firebase"
+import { setUser } from "../state/users/usersSlice"
 
-const SignUp = () => {
+const Login = () => {
   const navigate = useNavigate()
+  const dispatch = useDispatch()
+
   const [formValues, setFormValues] = useState({
     email: "",
     password: "",
@@ -31,6 +35,9 @@ const SignUp = () => {
     signInWithEmailAndPassword(auth, formValues.email, formValues.password)
       .then(async (res) => {
         setIsSubmitDisabled(false)
+        const user = res.user
+        dispatch(setUser(user))
+        console.log(user.accessToken)
         navigate("/")
       })
       .catch((err) => {
@@ -78,4 +85,4 @@ const SignUp = () => {
   )
 }
 
-export default SignUp
+export default Login
